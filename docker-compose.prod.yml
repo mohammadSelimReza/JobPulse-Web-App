@@ -1,0 +1,79 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: sahel_db_prod
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-sahel_db}
+      POSTGRES_USER: ${POSTGRES_USER:-sahel_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sahel123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U sahel_user -d sahel_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: sahel_redis_prod
+    volumes:
+      - redis_data:/data
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    container_name: sahel_web
+    env_file: .env
+    environment:
+      DJANGO_SETTINGS_MODULE: core.settings.production
+    ports:
+      - "8000:8000"
+    volumes:
+      - static_data:/app/staticfiles
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+
+  celery_worker:
+    build: .
+    container_name: sahel_celery_worker
+    env_file: .env
+    environment:
+      DJANGO_SETTINGS_MODULE: core.settings.production
+    command: celery -A core worker --loglevel=info --concurrency=2
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+
+  celery_beat:
+    build: .
+    container_name: sahel_celery_beat
+    env_file: .env
+    environment:
+      DJANGO_SETTINGS_MODULE: core.settings.production
+    command: celery -A core beat --loglevel=info
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_data:

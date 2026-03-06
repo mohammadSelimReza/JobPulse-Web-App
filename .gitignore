@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Environment Variables
+.env
+.env.prod
+.env.staging
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+static_root/
+media/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Docker
+*.pid
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+
+# Testing
+.pytest_cache/
+.tox/
+
+# Agent / AI folders
+.agent/
+.gemini/

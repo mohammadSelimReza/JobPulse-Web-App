@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: sahel_db
+    environment:
+      POSTGRES_DB: sahel_db
+      POSTGRES_USER: sahel_user
+      POSTGRES_PASSWORD: sahel123
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    container_name: sahel_redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
+
+volumes:
+  postgres_data:
+  redis_data:
