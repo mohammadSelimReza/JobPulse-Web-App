@@ -19,6 +19,7 @@ django-environ==0.13.0
 djangorestframework==3.16.1
 djangorestframework-simplejwt==5.5.1
 drf-spectacular==0.29.0
+faker==40.8.0
 frozenlist==1.8.0
 gunicorn==25.1.0
 idna==3.11
@@ -49,4 +50,3 @@ urllib3==2.6.3
 vine==5.1.0
 wcwidth==0.6.0
 yarl==1.22.0
-Faker==36.1.1
