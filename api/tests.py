@@ -42,11 +42,11 @@ class SubscriptionTests(TestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_create_subscription(self):
-        url = reverse('subscription-list')
-        data = {'category_id': self.category.id}
+        url = reverse('user_category_subscribe')
+        data = {'categories': [self.category.id]}
         response = self.client.post(url, data, format='json')
         
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(Subscription.objects.filter(user=self.user, category=self.category, is_active=True).exists())
 
 class USSDWebhookTests(TestCase):
@@ -84,11 +84,15 @@ class AdminTests(TestCase):
         self.client.force_authenticate(user=self.admin_user)
         
     def test_dashboard_stats(self):
-        User.objects.create(phone_number='+111')
+        # Create user
+        u = User.objects.create(phone_number='+111')
+        c = JobCategory.objects.create(name='Test Category')
+        Subscription.objects.create(user=u, category=c, is_active=True)
+        
         url = reverse('dashboard_stats')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['total_subscribers'], 1)
+        self.assertEqual(response.data['overview']['total_active_subscribers'], 1)
 
     def test_bulk_upload_jobs(self):
         import io
