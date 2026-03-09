@@ -24,7 +24,7 @@ logs:
 	docker compose -f docker-compose.prod.yml logs -f
 
 dlogs:
-	docker compose -f docker-compose.prod.yml logs -f web | grep --line-buffered " : \["
+	docker compose -f docker-compose.prod.yml logs -f web | grep --line-buffered -E " : \[|[0-9]{6}"
 
 # --- Django Commands inside Production Web Container ---
 migrate:
