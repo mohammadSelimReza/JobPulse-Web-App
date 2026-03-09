@@ -42,6 +42,9 @@ test:
 collectstatic:
 	docker compose -f docker-compose.prod.yml exec web python manage.py collectstatic --noinput
 
+generate-data:
+	docker compose -f docker-compose.prod.yml exec web python manage.py generate_seed
+
 # --- Local Environment Commands ---
 local-run:
 	python manage.py runserver 0.0.0.0:8000
