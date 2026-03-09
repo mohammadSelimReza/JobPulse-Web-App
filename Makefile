@@ -23,6 +23,9 @@ prod-restart:
 logs:
 	docker compose -f docker-compose.prod.yml logs -f
 
+dlogs:
+	docker compose -f docker-compose.prod.yml logs -f web | grep --line-buffered " : \["
+
 # --- Django Commands inside Production Web Container ---
 migrate:
 	docker compose -f docker-compose.prod.yml exec web python manage.py migrate
