@@ -1,0 +1,32 @@
+name: Deploy to Production VPS
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.WORK_DIR }}
+            echo "1. Pulling latest code..."
+            git pull origin main
+            
+            echo "2. Rebuilding Web Container..."
+            make prod-build
+            
+            echo "3. Restarting Services..."
+            make prod-up
+            
+            echo "4. Running Migrations & Collecting Static..."
+            make migrate
+            make collectstatic
+            
+            echo "Deployment Complete! ✅"
