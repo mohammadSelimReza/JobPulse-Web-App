@@ -334,6 +334,14 @@ class PublicPagesView(APIView):
             return Response({"policy": settings.privacy_policy})
         return Response({"error": "Invalid type"}, status=400)
 
+class UserCategoryListView(APIView):
+    """List all categories with ID so the user can pick which to subscribe to."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        categories = JobCategory.objects.all().order_by('name')
+        return Response(JobCategorySerializer(categories, many=True).data)
+
 class UserCategorySubscribeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 

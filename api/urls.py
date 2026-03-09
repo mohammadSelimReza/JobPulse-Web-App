@@ -5,7 +5,7 @@ from .views import (
     RequestOTPView, VerifyOTPView, USSDCallbackView,
     AdminDashboardStatsView, AdminCategoryViewSet, AdminJobOfferViewSet, 
     AdminSubscriberViewSet, AdminSystemSettingsView, BlacklistViewSet,
-    ContactUsView, PublicPagesView, UserCategorySubscribeView, 
+    ContactUsView, PublicPagesView, UserCategoryListView, UserCategorySubscribeView, 
     UserSMSPreviewView, UserDashboardView, UserProfileView, UserUnsubscribeView
 )
 
@@ -35,6 +35,7 @@ urlpatterns = [
     # Website (User Journey)
     path('contact/', ContactUsView.as_view(), name='contact_us'),
     path('pages/<str:type>/', PublicPagesView.as_view(), name='public_pages'),
+    path('user/categories/', UserCategoryListView.as_view(), name='user_category_list'),
     path('user/categories/subscribe/', UserCategorySubscribeView.as_view(), name='user_category_subscribe'),
     path('user/sms-preview/', UserSMSPreviewView.as_view(), name='user_sms_preview'),
     path('user/dashboard/', UserDashboardView.as_view(), name='user_dashboard'),
