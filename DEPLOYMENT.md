@@ -18,14 +18,14 @@ apt install -y curl ufw fail2ban default-jre
 Never run your applications as the `root` user.
 
 ```bash
-adduser deeps
-usermod -aG sudo deeps
+adduser sahel
+usermod -aG sudo sahel
 ```
 
 *Switch to the new user for the remainder of the setup:*
 
 ```bash
-su - deeps
+su - sahel
 ```
 
 ### 3. Configure the Firewall (UFW)
@@ -46,7 +46,7 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 
 # Add your user to the docker group so you don't need 'sudo' for every docker command
-sudo usermod -aG docker deeps
+sudo usermod -aG docker sahel
 newgrp docker
 
 # Install Docker Compose plugin
@@ -57,7 +57,7 @@ sudo apt-get install docker-compose-plugin
 
 ## Phase 2: Manual Initial Project Setup
 
-*Execute as the `deeps` user on the VPS.*
+*Execute as the `sahel` user on the VPS.*
 
 ### 1. Clone the Repository
 
@@ -144,13 +144,13 @@ server {
 
     # Serve static files directly via Nginx for speed
     location /static/ {
-        alias /home/deeps/sahel-app/staticfiles/;
+        alias /home/sahel/sahel-app/staticfiles/;
         expires 30d;
         add_header Cache-Control "public, max-age=2592000";
     }
 
     location /media/ {
-        alias /home/deeps/sahel-app/media/;
+        alias /home/sahel/sahel-app/media/;
     }
 }
 ```
@@ -187,7 +187,7 @@ ssh-keygen -t ed25519 -C "github-actions-deploy" -f github_deploy_key
 
 1. DO NOT enter a passphrase (leave it blank).
 2. Print the public key: `cat github_deploy_key.pub`.
-3. Add this **public key** to the `~/.ssh/authorized_keys` file on the VPS for the `deeps` user.
+3. Add this **public key** to the `~/.ssh/authorized_keys` file on the VPS for the `sahel` user.
 4. Print the private key: `cat github_deploy_key`. Copy the entire output.
 
 ### 2. Add GitHub Repository Secrets
@@ -196,9 +196,9 @@ Go to your GitHub Repository -> Settings -> Secrets and variables -> Actions.
 Add the following "New repository secrets":
 
 * `HOST`: `31.97.63.178`
-* `USERNAME`: `deeps`
+* `USERNAME`: `sahel`
 * `SSH_PRIVATE_KEY`: *(Paste the exact contents of `github_deploy_key` here)*
-* `WORK_DIR`: `/home/deeps/sahel-app`
+* `WORK_DIR`: `/home/sahel/sahel-app`
 
 ### 3. Create the GitHub Actions Workflow File
 
