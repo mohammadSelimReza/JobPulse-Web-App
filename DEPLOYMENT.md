@@ -80,7 +80,7 @@ nano .env
 
 * Change `SECRET_KEY` to a completely random string.
 * Ensure `DEBUG=False`.
-* Set `ALLOWED_HOSTS=31.97.63.178,yourdomain.com`.
+* Set `ALLOWED_HOSTS=31.97.63.178,sahel2000.selimreza.dev`.
 * Update the Database and Redis tokens if desired (make sure they match the `docker-compose.prod.yml`).
 * Insert your valid Orange SMS API keys.
 
@@ -132,7 +132,7 @@ Paste the following (replace `yourdomain.com` if you have one, or just use the I
 ```nginx
 server {
     listen 80;
-    server_name 31.97.63.178; # Or yourdomain.com
+    server_name sahel2000.selimreza.dev 31.97.63.178;
 
     location / {
         proxy_pass http://127.0.0.1:8000;
@@ -168,7 +168,7 @@ sudo systemctl restart nginx
 >
 > ```bash
 > sudo apt install certbot python3-certbot-nginx
-> sudo certbot --nginx -d yourdomain.com
+> sudo certbot --nginx -d sahel2000.selimreza.dev
 > ```
 
 ---
