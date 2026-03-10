@@ -109,6 +109,14 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
 }
 
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+}
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Sahel Job Offers API',
     'DESCRIPTION': 'API endpoints for managing job offers, subscribers, and bulk operations.',
