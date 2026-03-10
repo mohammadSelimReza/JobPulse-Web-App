@@ -43,7 +43,7 @@ class RequestOTPView(APIView):
             
             send_sms_task.delay(phone_number, f"Your Sahel Job Offers OTP is: {otp_code}")
             print(otp_code)
-            return Response({"message": "OTP sent successfully","code":otp_code}, status=status.HTTP_200_OK)
+            return Response({"message": f"OTP sent successfully {otp_code}"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyOTPView(APIView):
