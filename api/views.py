@@ -269,8 +269,9 @@ class AdminSubscriberViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['post'])
     def bulk_action(self, request):
-        action_type = request.data.get('action') # "unsubscribe" or "blacklist"
+        action_type = request.data.get('action') # "subscribe", "unsubscribe" or "blacklist"
         phone_numbers = request.data.get('phone_numbers', [])
+        category_id = request.data.get('category_id') # required for subscribe action
         
         if not action_type or not phone_numbers:
             return Response({"error": "action and phone_numbers are required"}, status=400)
@@ -284,10 +285,33 @@ class AdminSubscriberViewSet(viewsets.ModelViewSet):
         elif action_type == 'blacklist':
             Subscription.objects.filter(user__in=users).update(is_active=False)
             Blacklist.objects.bulk_create([
-                Blacklist(phone_number=u.phone_number, reason="Admin Bulk Blacklist") 
+                Blacklist(phone_number=u.phone_number, reason="Admin Bulk Action") 
                 for u in users if not Blacklist.objects.filter(phone_number=u.phone_number).exists()
             ])
             return Response({"message": f"Successfully blacklisted requested users."})
+            
+        elif action_type == 'subscribe':
+            if not category_id:
+                return Response({"error": "category_id is required for subscribe action"}, status=400)
+                
+            try:
+                category = JobCategory.objects.get(id=category_id)
+            except JobCategory.DoesNotExist:
+                return Response({"error": "Invalid category_id"}, status=400)
+                
+            subscribed_count = 0
+            for user in users:
+                # Do not subscribe blacklisted numbers
+                if not Blacklist.objects.filter(phone_number=user.phone_number).exists():
+                    sub, created = Subscription.objects.get_or_create(
+                        user=user, category=category, defaults={'subscribed_via': 'ADMIN', 'is_active': True}
+                    )
+                    if not sub.is_active:
+                        sub.is_active = True
+                        sub.save()
+                    subscribed_count += 1
+                    
+            return Response({"message": f"Successfully subscribed {subscribed_count} users to '{category.name}'."})
             
         return Response({"error": "Invalid action"}, status=400)
 
